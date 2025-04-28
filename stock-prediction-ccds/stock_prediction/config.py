@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import configparser
 from dotenv import load_dotenv
 from loguru import logger
 
@@ -21,6 +21,9 @@ MODELS_DIR = PROJ_ROOT / "models"
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
+# Initialize configparser to read the .ini file
+config = configparser.ConfigParser()
+config.read(PROJ_ROOT / "stock_prediction" / "config.ini")
 # If tqdm is installed, configure loguru with tqdm.write
 # https://github.com/Delgan/loguru/issues/135
 try:
