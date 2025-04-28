@@ -17,13 +17,22 @@ PROCESSED_DATA_DIR = DATA_DIR / "processed"
 EXTERNAL_DATA_DIR = DATA_DIR / "external"
 
 MODELS_DIR = PROJ_ROOT / "models"
-
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
 # Initialize configparser to read the .ini file
 config = configparser.ConfigParser()
 config.read(PROJ_ROOT / "stock_prediction" / "config.ini")
+
+# Access API keys from the config file
+API_KEYS = {
+    "alpha_vantage": config["API_KEYS"]["alpha_vantage_api_key"],
+    "newsapi": config["API_KEYS"]["newsapi_key"],
+    "reddit_client_id": config["API_KEYS"]["reddit_client_id"],
+    "reddit_client_secret": config["API_KEYS"]["reddit_client_secret"],
+    "reddit_user_agent": config["API_KEYS"]["reddit_user_agent"],
+    "finnhub": config["API_KEYS"]["finnhub_api_key"],
+}
 # If tqdm is installed, configure loguru with tqdm.write
 # https://github.com/Delgan/loguru/issues/135
 try:

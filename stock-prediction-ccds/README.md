@@ -45,6 +45,8 @@ The overall goal of this project is to develop a data-driven approach to predict
     │
     ├── config.py               <- Store useful variables and configuration
     │
+    ├── config.ini
+    │
     ├── dataset.py              <- Scripts to download or generate data
     │
     ├── features.py             <- Code to create features for modeling
