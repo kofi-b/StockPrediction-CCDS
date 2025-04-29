@@ -9,7 +9,7 @@ The overall goal of this project is to develop a data-driven approach to predict
 ## Project Organization
 
 ```
-├── LICENSE            <- Open-source license if one is chosen
+├── LICENSE.md         <- All rights reserved license for this project
 ├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
 ├── data
@@ -58,6 +58,10 @@ The overall goal of this project is to develop a data-driven approach to predict
     │
     └── plots.py                <- Code to create visualizations
 ```
+## License
+
+This project is licensed under an **All Rights Reserved** license.  
+See [LICENSE.md](./LICENSE.md) for full details.
 
 --------
 
