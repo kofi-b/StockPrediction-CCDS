@@ -13,4 +13,19 @@ ruff
 scikit-learn
 tqdm
 typer
+alpha_vantage==3.0.0
+matplotlib==3.10.1
+mplfinance==0.12.10b0
+nltk==3.9.1
+numpy~=2.2.5
+pandas==2.2.3
+praw==7.8.1
+requests==2.32.3
+scikit-learn==1.6.1
+seaborn==0.13.2
+statsmodels==0.14.4
+torch~=2.6.0
+yfinance~=0.2.55
+
+gym~=0.26.2
 -e .
