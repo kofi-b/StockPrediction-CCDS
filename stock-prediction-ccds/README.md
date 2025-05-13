@@ -5,6 +5,35 @@
 </a>
 
 The overall goal of this project is to develop a data-driven approach to predict short-to-medium-term stock price movements and optimize portfolio allocation for a set of technology stocks
+# Stock Prediction Project
+
+## Project Overview
+This project predicts stock prices by integrating traditional financial metrics, sentiment analysis from news and social media, and advanced machine learning techniques, including reinforcement learning (RL). Designed for modularity and reproducibility, it follows the [Cookiecutter Data Science (CCDS)](https://drivendata.github.io/cookiecutter-data-science/) structure. The pipeline spans data collection, preprocessing, feature engineering, modeling, and evaluation, delivering actionable insights for stock trading strategies.
+
+## Key Features
+- **Data Sources**: Stock data from Yahoo Finance; sentiment from NewsAPI, Reddit, and Finnhub.
+- **Feature Engineering**: Technical indicators (RSI, SMA, Bollinger Bands) and sentiment scores.
+- **Models**: Baseline (ARIMA, Linear Regression), deep learning (LSTM), and RL (DQN, PPO).
+- **Outputs**: Visualizations, performance metrics, and trading strategy evaluations.
+
+## Project Structure
+- **`data/`**: Organized into `raw/`, `interim/`, `processed/`, and `external/` subdirectories to track data stages.
+- **`stock_prediction/`**: Core scripts for the pipeline.
+  - `dataset.py`: Data collection and preprocessing.
+  - `features.py`: Feature generation.
+  - `modeling/`: Model training and evaluation scripts (e.g., `train.py`, `train_lstm.py`, `train_rl.py`).
+  - `plots.py`: Visualization tools.
+- **`reports/`**: Stores figures, logs, and results.
+- **`models/`**: Saves trained models.
+
+## Replicating the Pipeline
+1. **Configure**: Set API keys in `config.ini`.
+2. **Collect Data**: Run `dataset.py`.
+3. **Engineer Features**: Execute `features.py`.
+4. **Train Models**: Use `train.py`, `train_lstm.py`, and `train_rl.py`.
+5. **Evaluate**: Visualize results with `plots.py`.
+
+For a detailed guide, see [Data Pipeline Guide](datapipeline.md).
 
 ## Project Organization
 
@@ -61,6 +90,7 @@ The overall goal of this project is to develop a data-driven approach to predict
         │   └── stock_trading_env.py  <- Custom Gym environment for stock trading
         └── utils.py            <- Utility functions and classes for modeling (e.g., StockLSTM)
 ```
+
 ## License
 
 This project is licensed under an **All Rights Reserved** license.  
