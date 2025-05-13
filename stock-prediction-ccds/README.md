@@ -40,23 +40,26 @@ The overall goal of this project is to develop a data-driven approach to predict
 ├── setup.cfg          <- Configuration file for flake8
 │
 └── stock_prediction   <- Source code for use in this project.
-    │
     ├── __init__.py             <- Makes stock_prediction a Python module
-    │
     ├── config.py               <- Store useful variables and configuration
-    │
-    ├── config.ini
-    │
+    ├── config.ini              <- Configuration file for API keys and other settings
     ├── dataset.py              <- Scripts to download or generate data
-    │
     ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
+    ├── plots.py                <- Code to create visualizations
+    ├── analysis
+    │   └── financial_analysis.py  <- Code for financial metrics calculation (CAPM, DCF)
+    └── modeling                
+        ├── __init__.py 
+        ├── aggregate_rl_results.py  <- Code to aggregate RL model results
+        ├── predict.py          <- Code to run model inference with trained models          
+        ├── pretrain_lstm.py    <- Code to pretrain LSTM model on S&P 500 data
+        ├── train.py            <- Code to train baseline models (ARIMA, Linear Regression)
+        ├── train_lstm.py       <- Code to train LSTM models
+        ├── train_rl.py         <- Code to train RL models (DQN, PPO)
+        ├── visualize_rl.py     <- Code to visualize RL model results
+        ├── envs
+        │   └── stock_trading_env.py  <- Custom Gym environment for stock trading
+        └── utils.py            <- Utility functions and classes for modeling (e.g., StockLSTM)
 ```
 ## License
 

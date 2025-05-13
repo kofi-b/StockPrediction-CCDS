@@ -5,7 +5,7 @@ import gym
 from stable_baselines3 import DQN, PPO
 from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.callbacks import EvalCallback
+from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnRewardThreshold
 from stable_baselines3.common.evaluation import evaluate_policy
 import optuna
 from concurrent.futures import ProcessPoolExecutor
@@ -17,6 +17,8 @@ from stock_prediction.config import PROCESSED_DATA_DIR, MODELS_DIR, REPORTS_DIR
 from stock_prediction.modeling.envs.stock_trading_env import StockTradingEnv
 
 app = typer.Typer()
+def get_device(model_type: str) -> str:
+    return 'cpu' if model_type == 'PPO' else 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def tune_hyperparameters(train_env, val_env, model_type, num_trials=20):
     """Tune hyperparameters using Optuna."""
@@ -29,18 +31,42 @@ def tune_hyperparameters(train_env, val_env, model_type, num_trials=20):
             lr = trial.suggest_float('lr', 1e-5, 1e-2, log=True)
             n_steps = trial.suggest_int('n_steps', 16, 2048)
             gamma = trial.suggest_float('gamma', 0.9, 0.999)
-            model = PPO("MlpPolicy", train_env, learning_rate=lr, n_steps=n_steps, gamma=gamma, verbose=0)
+
+            # Dynamic batch size calculation: batch_size = n_steps // k
+            # Ensure batch_size is at least 16 by limiting k
+            max_k = max(1, n_steps // 16)
+            k = trial.suggest_int('k', 1, max_k)
+            batch_size = n_steps // k
+
+            model = PPO("MlpPolicy", train_env, learning_rate=lr, n_steps=n_steps, gamma=gamma, batch_size=batch_size, verbose=0, device=get_device(model_type))
         else:
             raise ValueError("Unsupported model type")
-        model.learn(total_timesteps=10000)
+        model.learn(total_timesteps=200000)
         mean_reward, _ = evaluate_policy(model, val_env, n_eval_episodes=5)
         return mean_reward
-    study = optuna.create_study(direction='maximize')
+
+    storage = f"sqlite:///{REPORTS_DIR}/optuna_{model_type}_{ticker}.db"
+    study = optuna.create_study(direction='maximize', storage=storage, study_name=f"{model_type}_{ticker}_study", load_if_exists=True)
     study.optimize(objective, n_trials=num_trials)
     return study.best_params
 
 def train_and_evaluate(ticker, use_sentiment, model_type, best_params, full_train_env, test_env, total_timesteps=10000):
     """Train and evaluate the RL model."""
+    thresholds = {
+        'CSCO': 100000, 'META': 10000, 'MSFT': 5000, 'TSLA': 1000,
+        'AMZN': 1000, 'MA': 1000, 'AAPL': 5000, 'NVDA': 5000
+    }
+    reward_threshold = thresholds.get(ticker, 5000)
+    stop_callback = StopTrainingOnRewardThreshold(reward_threshold=reward_threshold, verbose=1)
+    eval_callback = EvalCallback(
+        test_env,
+        best_model_save_path=str(MODELS_DIR / f"{ticker}_{model_type}_best"),
+        log_path=str(REPORTS_DIR / f"{ticker}_{model_type}_eval.log"),
+        eval_freq=1000,
+        deterministic=True,
+        render=False,
+        callback_on_new_best=stop_callback
+    )
     eval_callback = EvalCallback(
         test_env,
         best_model_save_path=str(MODELS_DIR / f"{ticker}_{model_type}_best"),
